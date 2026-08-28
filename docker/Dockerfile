@@ -9,7 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_NO_CACHE_DIR=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates && \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git ca-certificates libglib2.0-0 libgl1 libsm6 libxext6 libxrender1 libxcb1 && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
@@ -19,7 +20,7 @@ RUN git clone --depth 1 --branch v6.2 https://github.com/ultralytics/yolov5.git 
     git -C yolov5-airockchip rev-parse HEAD && \
     pip install --no-cache-dir -r yolov5/requirements.txt -r yolov5-airockchip/requirements.txt && \
     pip install --no-cache-dir "numpy<2" -r /tmp/requirements-smoke.txt && \
-    sed -i 's/np\\.int/int/g' yolov5/utils/dataloaders.py
+    sed -i 's/np\.int/int/g' yolov5/utils/dataloaders.py
 
 WORKDIR /workspace
 COPY docker/requirements-smoke.txt /workspace/docker/requirements-smoke.txt

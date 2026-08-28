@@ -9,6 +9,11 @@ test -f "$weights"
 test -d /data/coco/images/train2017
 test -d /data/coco/images/val2017
 
+# The upstream dataset checker downloads this plotting-only font. The smoke test is
+# offline and uses --noplots, so a sentinel avoids a needless network dependency.
+mkdir -p /root/.config/Ultralytics
+: > /root/.config/Ultralytics/Arial.ttf
+
 python "$workspace/scripts/create_coco_smoke_subset.py" \
   --coco /data/coco --output "$subset_dir" --train-count 4 --val-count 2
 
@@ -16,6 +21,6 @@ cd /opt/yolov5
 python train.py \
   --weights "$weights" \
   --data "$subset_dir/coco-smoke.yaml" \
-  --epochs 1 --batch-size 2 --imgsz 64 --workers 0 --device cpu --noval \
+  --epochs 1 --batch-size 2 --imgsz 64 --workers 0 --device cpu --noval --noplots \
   --project "$workspace/outputs/official-finetune-smoke" --name "$(basename "${weights%.pt}")" \
   --exist-ok
