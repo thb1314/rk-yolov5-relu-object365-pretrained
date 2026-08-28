@@ -1,5 +1,8 @@
 # RK YOLOv5 ReLU Objects365 Pretrained Weights
 
+> 打个广告：模型部署优化、模型加速（云端、端侧、边缘侧）、计算机视觉相关需求欢迎联系 zhuilewang@163.com
+> 面向行业与厂家：工业质检、表面缺陷检测、SOP 行为检测等
+
 面向 RKNN/Rockchip 开发者的 YOLOv5 ReLU 预训练权重与微调起点。权重来自
 MMYOLO 训练 checkpoint，并严格转换为官方 Ultralytics YOLOv5 格式；用户侧只需
 使用官方 YOLOv5 微调，再通过 Rockchip YOLOv5 导出 RKNN-friendly ONNX。
