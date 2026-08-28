@@ -1,84 +1,84 @@
-# RK YOLOv5 Pretrained Weights
+# RK YOLOv5 ReLU Objects365 Pretrained Weights
 
-COCO-pretrained YOLOv5 P5 detection weights for fine-tuning and Rockchip RKNN deployment.
-The release files are converted from MMYOLO training checkpoints into the official
-Ultralytics YOLOv5 checkpoint format. They use **ReLU**, not the upstream default
-SiLU; this is intentional and the converted checkpoints preserve that activation.
+面向 RKNN/Rockchip 开发者的 YOLOv5 ReLU 预训练权重与微调起点。权重来自
+MMYOLO 训练 checkpoint，并严格转换为官方 Ultralytics YOLOv5 格式；用户侧只需
+使用官方 YOLOv5 微调，再通过 Rockchip YOLOv5 导出 RKNN-friendly ONNX。
 
-## Models
+所有模型均使用 **ReLU**，不是官方 YOLOv5 默认的 SiLU。加载 Release 权重时会保留
+该激活函数，无需手动修改模型结构。
 
-| Model | COCO training | Asset | SHA256 |
-| --- | --- | --- | --- |
-| YOLOv5-N ReLU | 300 epochs | `yolov5n_relu_coco_best_epoch300.pt` | `af918e856d43f166b5611be6c107a2deb916c8a9ba7767dcfd515780e687c877` |
-| YOLOv5-S ReLU | 300 epochs | `yolov5s_relu_coco_best_epoch300.pt` | `a667e70170f444b2078fdd12de74e24b22439d0ddf846058ab46ca95b5283570` |
-| YOLOv5-M ReLU | 290 epochs (best) | `yolov5m_relu_coco_best_epoch290.pt` | `6510733b15a93478a3d0388dff1ad6a5c09d39775662f7bc6299ed2aec6ab2df` |
-| YOLOv5-L ReLU | 255 epochs (best) | `yolov5l_relu_coco_best_epoch255.pt` | `2c66e03f278b0e26ad7188fd03e141d6824932ff20861c7e1dd4ef58f660a718` |
+## 权重
 
-Download a release asset and verify it with the accompanying `SHA256SUMS` file:
+| 模型 | Objects365 权重 | COCO 权重 |
+| --- | --- | --- |
+| YOLOv5-N ReLU | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5n_relu_objects365_best_epoch100.pt) | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5n_relu_coco_best_epoch300.pt) |
+| YOLOv5-S ReLU | X | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5s_relu_coco_best_epoch300.pt) |
+| YOLOv5-M ReLU | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5m_relu_objects365_best_epoch100.pt) | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5m_relu_coco_best_epoch290.pt) |
+| YOLOv5-L ReLU | X | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5l_relu_coco_best_epoch255.pt) |
 
-Release: [v0.1.0](https://github.com/thb1314/rk-yolov5-pretrained/releases/tag/v0.1.0)
+- Objects365 权重为 365 类检测头；COCO 权重为 80 类检测头。
+- Release 资产：[v0.1.0](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/tag/v0.1.0)。下载后使用其中的 `SHA256SUMS` 校验，`models.json` 提供机器可读的模型元数据。
 
 ```bash
 sha256sum -c SHA256SUMS
 ```
 
-## Official YOLOv5 Fine-tuning
+<details>
+<summary>训练记录</summary>
 
-The checkpoints target [Ultralytics YOLOv5 v6.2](https://github.com/ultralytics/yolov5/tree/v6.2).
-They are ordinary official-format `.pt` checkpoints and can be used by the upstream
-scripts. Use the image supplied here, or install the v6.2 requirements locally.
+| 模型 | 数据集 | epoch | batch | 精度 | 增强路径 | 起始权重 |
+| --- | --- | ---: | --- | --- | --- | --- |
+| YOLOv5-N | Objects365 | 100 | 4 x 64 | FP32 | MMYOLO YOLOv5 标准 CPU Mosaic | scratch |
+| YOLOv5-M | Objects365 | 100 (best) | 2 x 64, accum 2 | BF16 | GPU decode + batch GPU augment | scratch |
+| YOLOv5-N | COCO | 300 | 1 x 256 | FP32 | MMYOLO YOLOv5 标准 CPU Mosaic | Objects365-N e100 |
+| YOLOv5-S | COCO | 300 | 2 x 128 | FP32 | MMYOLO YOLOv5 标准 CPU Mosaic | Objects365-S e100 |
+| YOLOv5-M | COCO | 290 (best) | 4 x 64, accum 2 | BF16 | GPU decode + batch GPU augment | Objects365-M e200 |
+| YOLOv5-L | COCO | 255 (best) | 1 x 64 | BF16 | GPU decode + batch GPU augment | Objects365-L e100 |
+
+</details>
+
+## 1. 官方 YOLOv5 微调
+
+已验证的用户训练入口为 [Ultralytics YOLOv5 v6.2](https://github.com/ultralytics/yolov5/tree/v6.2)。
+将 `--weights` 换成上表中与你的任务最接近的权重，并将 `--data` 指向你的 YOLO 数据集 YAML。
 
 ```bash
 git clone --branch v6.2 --depth 1 https://github.com/ultralytics/yolov5.git
 cd yolov5
 pip install -r requirements.txt
-python train.py --weights /path/to/yolov5n_relu_coco_best_epoch300.pt \
-  --data /path/to/your_dataset.yaml --epochs 100 --img 640 --batch 16
+
+python train.py \
+  --weights /path/to/yolov5n_relu_objects365_best_epoch100.pt \
+  --data /path/to/your_dataset.yaml \
+  --epochs 100 --img 640 --batch 16
 ```
 
-The supplied `scripts/smoke_finetune_official.sh` makes a tiny COCO subset and runs a
-one-epoch official-training loading test. It is intentionally a wiring check, not a
-meaningful accuracy run.
+N 权重已在干净环境的官方 v6.2 `train.py` 中完成一轮训练 smoke，日志显示
+`Transferred 349/349 items`。完整记录见 [验证记录](docs/VERIFICATION.md)。
 
-## Docker Smoke Test
+## 2. Rockchip ONNX 导出
 
-```bash
-docker build -t rk-yolov5-pretrained:smoke -f docker/Dockerfile .
-docker run --rm \
-  -v /path/to/coco:/data/coco:ro \
-  -v /path/to/downloaded-weights:/weights:ro \
-  -v "$PWD":/workspace \
-  rk-yolov5-pretrained:smoke \
-  bash scripts/smoke_finetune_official.sh /weights/yolov5n_relu_coco_best_epoch300.pt
-```
-
-`/path/to/coco` must contain `images/train2017`, `images/val2017`, and COCO labels.
-The smoke test needs only a few images and runs on CPU by default.
-
-## Rockchip RKNN
-
-The local Rockchip fork is based on YOLOv5 v7.0 and accepts these official-format
-checkpoints. Its `--rknpu` mode exports an RKNN-friendly ONNX graph and writes
-`RK_anchors.txt`; it does **not** itself produce a `.rknn` file. Use the target-SoC
-version of RKNN Toolkit2 / RKNN Model Zoo to compile that ONNX graph into `.rknn`.
+已验证导出端为 [aiRockchip YOLOv5](https://github.com/airockchip/yolov5) commit
+`d25a075`。仓库脚本调用其 `--rknpu` 模式，生成 ONNX 与 `RK_anchors.txt`：
 
 ```bash
 bash scripts/export_rknn_onnx.sh \
-  /weights/yolov5n_relu_coco_best_epoch300.pt \
-  /opt/yolov5-airockchip /workspace/outputs/rknn
+  /path/to/yolov5n_relu_coco_best_epoch300.pt \
+  /path/to/yolov5-airockchip \
+  /path/to/output
 ```
 
-The export script checks the ONNX model and requires `RK_anchors.txt` to be produced.
+该路径已通过 ONNX checker。输出的 ONNX 与 `RK_anchors.txt` 是 RKNN Toolkit2 的输入；
+不同 SoC、Toolkit2 版本和量化校准数据需要在目标环境中完成最终 `.rknn` 转换与验证。
 
-## Conversion
+## 转换与验证
 
-`tools/convert_mmyolo_yolov5_to_ultralytics.py` is the strict MMYOLO-to-official
-converter used for these assets. It supports P5 YOLOv5 N/S/M/L models and fails on
-unmapped or shape-mismatched tensors. See [MODEL_CARD.md](MODEL_CARD.md) for the
-conversion and validation evidence.
+[`tools/convert_mmyolo_yolov5_to_ultralytics.py`](tools/convert_mmyolo_yolov5_to_ultralytics.py)
+是本 Release 使用的严格转换器，支持 YOLOv5 P5 N/S/M/L。未映射 tensor 或形状不一致会
+直接失败。转换一致性与干净 Docker 验证记录见 [MODEL_CARD.md](MODEL_CARD.md) 和
+[docs/VERIFICATION.md](docs/VERIFICATION.md)。
 
-## License
+## 许可证
 
-The converter and integration material are distributed under [GPL-3.0-only](LICENSE),
-to remain compatible with the official YOLOv5 codebase. Dataset terms remain governed
-by their respective dataset providers.
+仓库的转换、集成和文档以 [GPL-3.0-only](LICENSE) 发布。COCO 与 Objects365 数据集的
+使用仍分别受其原始条款约束。

@@ -1,47 +1,27 @@
-# Model Card
+# 模型卡
 
-## Scope
+## 范围
 
-These are YOLOv5 P5, 80-class COCO object detectors trained in MMYOLO and converted
-losslessly to the official Ultralytics YOLOv5 checkpoint layout. All models use ReLU
-activations. This differs from standard upstream YOLOv5 models, which default to SiLU.
+本仓库发布 YOLOv5 P5 ReLU 检测权重，覆盖 COCO 80 类与 Objects365 365 类。所有
+Release checkpoint 均由 MMYOLO checkpoint 严格转换为官方 Ultralytics YOLOv5 格式。
 
-| Model | Best COCO epoch | File size | Source training shape |
-| --- | ---: | ---: | --- |
-| N | 300 | 7.4 MiB | 1 x 256 |
-| S | 300 | 28 MiB | 2 x 128 |
-| M | 290 | 82 MiB | COCO best checkpoint |
-| L | 255 | 179 MiB | 1 x 64, BF16 + GPU augmentation |
+| 数据集 | 模型 | Release 训练结果 |
+| --- | --- | --- |
+| COCO | N / S / M / L | N e300, S e300, M e290, L e255 |
+| Objects365 | N / M | N e100, M e100 |
 
-## Conversion Fidelity
+## 转换一致性
 
-The converter reverses MMYOLO's official YOLOv5 checkpoint mapping and reconstructs
-the model with ReLU before strict loading. It uses the saved EMA `state_dict`, which
-is what MMEngine's `EMAHook` writes into an evaluation checkpoint.
+转换器反转 MMYOLO 官方 YOLOv5 checkpoint 映射，在模型构建时将默认 SiLU 替换为 ReLU，
+再执行严格 state dict 加载。checkpoint 保存的 `state_dict` 已按 MMEngine `EMAHook`
+语义包含评估所用的 EMA 值。
 
-For YOLOv5-N, the converted model was validated with the official v6.2 code:
+对 YOLOv5-N COCO 权重，官方 YOLOv5 v6.2 的 COCO 评估结果为 AP 0.256、AP50 0.427；
+MMYOLO 原日志为 0.257、0.427。随机张量与真实 COCO 图片的 P3/P4/P5 原始输出
+`max_abs=0`。详情见 [验证记录](docs/VERIFICATION.md)。
 
-| Evaluation | MMYOLO source | Converted official checkpoint |
-| --- | ---: | ---: |
-| COCO AP | 0.257 | 0.256 |
-| COCO AP50 | 0.427 | 0.427 |
+## 限制
 
-P3/P4/P5 raw outputs had `max_abs=0` on seeded tensors and on a real COCO image after
-matching preprocessing. The 0.001 AP reporting difference is within independent
-evaluator rounding/implementation variation; AP50 matches exactly.
-
-The remaining release checkpoints use the same strict architecture-aware conversion.
-
-## Intended Use
-
-Use the models as initialization for fine-tuning on a downstream detection dataset,
-or export them through the Rockchip-friendly ONNX path before running RKNN Toolkit2.
-Validate accuracy on the target data and hardware before deployment.
-
-## Limitations
-
-- COCO labels and image distributions may not resemble the deployment domain.
-- ReLU is a model property. Do not rebuild a SiLU YAML model and load these weights
-  while expecting identical behavior.
-- The Rockchip ONNX export is only the first deployment step; target-specific RKNN
-  conversion and calibration remain necessary.
+- ReLU 是模型属性，不能将权重加载进默认 SiLU 模型后期待相同行为。
+- COCO 与 Objects365 的检测头类别数不同；下游任务须按自己的数据 YAML 重新适配。
+- RKNN-friendly ONNX 导出已验证；目标 SoC 的 `.rknn`、量化精度和部署性能需在目标环境验证。
