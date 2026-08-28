@@ -61,10 +61,9 @@ checkpoints. Its `--rknpu` mode exports an RKNN-friendly ONNX graph and writes
 version of RKNN Toolkit2 / RKNN Model Zoo to compile that ONNX graph into `.rknn`.
 
 ```bash
-git clone https://github.com/airockchip/yolov5.git external/yolov5-airockchip
 bash scripts/export_rknn_onnx.sh \
   /weights/yolov5n_relu_coco_best_epoch300.pt \
-  external/yolov5-airockchip /workspace/outputs/rknn
+  /opt/yolov5-airockchip /workspace/outputs/rknn
 ```
 
 The export script checks the ONNX model and requires `RK_anchors.txt` to be produced.

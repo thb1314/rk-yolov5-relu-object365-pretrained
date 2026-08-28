@@ -15,7 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends git ca-certific
 WORKDIR /opt
 COPY docker/requirements-smoke.txt /tmp/requirements-smoke.txt
 RUN git clone --depth 1 --branch v6.2 https://github.com/ultralytics/yolov5.git yolov5 && \
-    pip install --no-cache-dir -r yolov5/requirements.txt && \
+    git clone --depth 1 https://github.com/airockchip/yolov5.git yolov5-airockchip && \
+    git -C yolov5-airockchip rev-parse HEAD && \
+    pip install --no-cache-dir -r yolov5/requirements.txt -r yolov5-airockchip/requirements.txt && \
     pip install --no-cache-dir "numpy<2" -r /tmp/requirements-smoke.txt && \
     sed -i 's/np\\.int/int/g' yolov5/utils/dataloaders.py
 
