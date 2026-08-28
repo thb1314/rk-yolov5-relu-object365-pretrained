@@ -1,0 +1,3 @@
+onnx==1.16.1
+onnxsim==0.4.36
+pycocotools>=2.0.6

@@ -1,0 +1,13 @@
+{
+  "format": "ultralytics-yolov5-v6.2-compatible",
+  "task": "object-detection",
+  "dataset": "COCO 2017",
+  "num_classes": 80,
+  "activation": "ReLU",
+  "models": [
+    {"name": "yolov5n", "asset": "yolov5n_relu_coco_best_epoch300.pt", "best_epoch": 300, "sha256": "af918e856d43f166b5611be6c107a2deb916c8a9ba7767dcfd515780e687c877"},
+    {"name": "yolov5s", "asset": "yolov5s_relu_coco_best_epoch300.pt", "best_epoch": 300, "sha256": "a667e70170f444b2078fdd12de74e24b22439d0ddf846058ab46ca95b5283570"},
+    {"name": "yolov5m", "asset": "yolov5m_relu_coco_best_epoch290.pt", "best_epoch": 290, "sha256": "6510733b15a93478a3d0388dff1ad6a5c09d39775662f7bc6299ed2aec6ab2df"},
+    {"name": "yolov5l", "asset": "yolov5l_relu_coco_best_epoch255.pt", "best_epoch": 255, "sha256": "2c66e03f278b0e26ad7188fd03e141d6824932ff20861c7e1dd4ef58f660a718"}
+  ]
+}

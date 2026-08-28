@@ -1,0 +1,20 @@
+# Release assets are published through GitHub Releases, never Git.
+*.pt
+*.pth
+*.onnx
+*.rknn
+*.engine
+
+# Runtime output
+runs/
+outputs/
+external/
+__pycache__/
+*.py[cod]
+.env
+.venv/
+
+# Editor and operating-system state
+.vscode/
+.idea/
+.DS_Store
