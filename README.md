@@ -16,6 +16,8 @@ SiLU; this is intentional and the converted checkpoints preserve that activation
 
 Download a release asset and verify it with the accompanying `SHA256SUMS` file:
 
+Release: [v0.1.0](https://github.com/thb1314/rk-yolov5-pretrained/releases/tag/v0.1.0)
+
 ```bash
 sha256sum -c SHA256SUMS
 ```
