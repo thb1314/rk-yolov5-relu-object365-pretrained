@@ -3,6 +3,21 @@
 > 打个广告：模型部署优化、模型加速（云端、端侧、边缘侧）、计算机视觉相关需求欢迎联系 zhuilewang@163.com
 > 面向行业与厂家：工业质检、表面缺陷检测、SOP 行为检测等
 
+## 项目初衷
+
+当前 YOLO 模型的发展越来越重视 GPU 推理速度与模型精度之间的平衡。然而在 NPU 端，
+尤其是国产瑞芯微系列 NPU 上，许多面向 GPU 设计的新型 YOLO 网络结构并不能直接转化为
+更高的端侧效率。随着 YOLO 版本不断迭代，模型结构日益复杂，实际部署在瑞芯微 NPU 上的
+吞吐反而可能下降。在我们关注的 YOLO Small 规格中，YOLOv5 依然具有突出的推理速度优势。
+
+但为了适配 NPU 而将激活函数替换为 ReLU 时，由于缺少大型数据集预训练，往往会造成一定的
+精度损失。为此，本项目以 YOLOv5 为基础，将 SiLU 替换为 ReLU 激活函数，并在 Objects365
+和 COCO 数据集上从零开始依次进行预训练，以重新建立更适合 NPU 部署的高精度基础模型。
+
+我们开源了 YOLOv5-ReLU Nano、Small、Medium 和 Large 四种规格的预训练权重。开发者可以
+基于这些权重继续微调自己的业务数据，在保留 YOLOv5-ReLU 高效 NPU 推理能力的同时，获得
+更好的检测精度，实现端侧速度与精度的双重收益。
+
 面向 RKNN/Rockchip 开发者的 YOLOv5 ReLU 预训练权重与微调起点。权重来自
 MMYOLO 训练 checkpoint，并严格转换为官方 Ultralytics YOLOv5 格式；用户侧只需
 使用官方 YOLOv5 微调，再通过 Rockchip YOLOv5 导出 RKNN-friendly ONNX。
