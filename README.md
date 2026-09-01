@@ -27,14 +27,17 @@ MMYOLO 训练 checkpoint，并严格转换为官方 Ultralytics YOLOv5 格式；
 
 ## 权重
 
-| 模型 | Objects365 权重 | COCO 权重 |
-| --- | --- | --- |
-| YOLOv5-N ReLU | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5n_relu_objects365_best_epoch100.pt) | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5n_relu_coco_best_epoch300.pt) |
-| YOLOv5-S ReLU | X | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5s_relu_coco_best_epoch300.pt) |
-| YOLOv5-M ReLU | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5m_relu_objects365_best_epoch100.pt) | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5m_relu_coco_best_epoch290.pt) |
-| YOLOv5-L ReLU | X | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5l_relu_coco_best_epoch255.pt) |
+| 模型 | Objects365 权重 | COCO 权重 | COCO mAP@0.5:0.95 | COCO mAP@0.5 |
+| --- | --- | --- | ---: | ---: |
+| YOLOv5-N ReLU | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5n_relu_objects365_best_epoch100.pt) | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5n_relu_coco_best_epoch300.pt) | 25.7% | 42.7% |
+| YOLOv5-S ReLU | X | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5s_relu_coco_best_epoch300.pt) | 37.0% | 56.3% |
+| YOLOv5-M ReLU | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5m_relu_objects365_best_epoch100.pt) | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5m_relu_coco_best_epoch290.pt) | 44.8% | 63.5% |
+| YOLOv5-L ReLU | X | [下载](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/download/v0.1.0/yolov5l_relu_coco_best_epoch255.pt) | 47.9% | 66.4% |
 
 - Objects365 权重为 365 类检测头；COCO 权重为 80 类检测头。
+- COCO 指标来自 MMYOLO 在 `COCO val2017` 上对最佳 checkpoint 的评测；`mAP@0.5:0.95`
+  为 COCO AP，`mAP@0.5` 为 AP50。YOLOv5-N 转为官方格式后使用 Ultralytics YOLOv5
+  v6.2 复评得到 25.6% / 42.7%，与训练日志中的 25.7% / 42.7% 基本一致。
 - Release 资产：[v0.1.0](https://github.com/thb1314/rk-yolov5-relu-object365-pretrained/releases/tag/v0.1.0)。下载后使用其中的 `SHA256SUMS` 校验，`models.json` 提供机器可读的模型元数据。
 
 ```bash
@@ -44,7 +47,7 @@ sha256sum -c SHA256SUMS
 <details>
 <summary>训练记录</summary>
 
-| 模型 | 数据集 | epoch | batch | 精度 | 增强路径 | 起始权重 |
+| 模型 | 数据集 | epoch | batch | 训练精度 | 增强路径 | 起始权重 |
 | --- | --- | ---: | --- | --- | --- | --- |
 | YOLOv5-N | Objects365 | 100 | 4 x 64 | FP32 | MMYOLO YOLOv5 标准 CPU Mosaic | scratch |
 | YOLOv5-M | Objects365 | 100 (best) | 2 x 64, accum 2 | BF16 | GPU decode + batch GPU augment | scratch |
